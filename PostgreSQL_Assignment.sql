@@ -2,7 +2,7 @@
 CREATE DATABASE conservation_db;
 
 CREATE TABLE rangers(
-    id SERIAL PRIMARY KEY,
+    ranger_id SERIAL PRIMARY KEY,
     name VARCHAR(50),
     region  VARCHAR(200)
 );
@@ -11,7 +11,7 @@ CREATE TABLE rangers(
 
 
 CREATE TABLE species(
-    id SERIAL PRIMARY KEY,
+  species_id SERIAL PRIMARY KEY,
    common_name VARCHAR(200),
     scientific_name VARCHAR(200) ,
     discovery_date DATE,
@@ -21,9 +21,9 @@ CREATE TABLE species(
 
 
 CREATE TABLE sightings (
-    id SERIAL PRIMARY KEY,
-    species_id INTEGER REFERENCES species(id),
-    ranger_id INTEGER REFERENCES rangers(id),
+    sighting_id SERIAL PRIMARY KEY,
+    species_id INTEGER REFERENCES species(species_id),
+    ranger_id INTEGER REFERENCES rangers(ranger_id),
     location  VARCHAR(100) ,
     sighting_time TIMESTAMP ,
     notes VARCHAR(300)
@@ -100,9 +100,10 @@ FROM sightings;
 
 
 -----problem ---9
- DELETE FROM rangers 
-   WHERE id NOT IN (SELECT DISTINCT ranger_id FROM sightings
-   WHERE ranger_id IS NOT NULL);
+DELETE FROM rangers
+WHERE id NOT IN (
+    SELECT DISTINCT ranger_id FROM sightings
+);
 
 
 
