@@ -18,6 +18,10 @@ CREATE TABLE species(
     conservation_status VARCHAR(100)
  )
 
+ DROP TABLE rangers; 
+ DROP TABLE Species;
+ DROP TABLE sightings;
+
 
 
 CREATE TABLE sightings (
@@ -62,16 +66,16 @@ Select  * From sightings
   WHERE location ILIKE '%pass';
 
 --- problem  ---4
-SELECT ranger.name, COUNT(sepices.id) AS total_sightings
+SELECT ranger.name, COUNT(sightings.sighting_id) AS total_sightings
 FROM rangers ranger
-LEFT JOIN sightings sepices ON ranger.id = sepices.ranger_id
-GROUP BY ranger.id, ranger.name 
+LEFT JOIN sightings  ON ranger.ranger_id =  sightings.ranger_id
+GROUP BY ranger.ranger_id,  ranger.name 
 ORDER BY total_sightings  ;
 
 ----- problem ---5
 SELECT species.common_name
   FROM species
-   LEFT JOIN sightings ON species.id = sightings.species_id
+   LEFT JOIN sightings ON species.species_id = sightings.species_id
    WHERE sightings.species_id IS NULL;
 
 --    problem --6 
@@ -79,8 +83,8 @@ SELECT species.common_name
  species.common_name,
  sightings.sighting_time
  From sightings
- JOIN rangers on sightings.ranger_id = rangers.id
- JOIN species ON sightings.species_id = species.id
+ JOIN rangers on sightings.ranger_id = rangers.ranger_id
+ JOIN species ON sightings.species_id = species.species_id
  ORDER BY sighting_time DESC
  LIMIT 2;
 
@@ -90,7 +94,7 @@ SELECT species.common_name
 
 --  problem---8
 SELECT
-    id AS sighting_id,
+   sighting_id,
     CASE
         WHEN  sighting_time:: time  < TIME '12:00' THEN 'Morning'
         WHEN  sighting_time:: time  < TIME '17:00' THEN 'Afternoon'
@@ -101,7 +105,7 @@ FROM sightings;
 
 -----problem ---9
 DELETE FROM rangers
-WHERE id NOT IN (
+WHERE  ranger_id NOT IN (
     SELECT DISTINCT ranger_id FROM sightings
 );
 
